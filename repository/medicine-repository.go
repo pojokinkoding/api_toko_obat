@@ -64,3 +64,16 @@ func MapMedicine(value string) string {
 
 	return mp[value]
 }
+
+func (m *MedicineRepository) GetMedicineByID(id uint) (*model.Medicine, error) {
+	var medicine model.Medicine
+	err := m.db.Table("medicines").
+		Joins("left join categories on categories.id = medicines.category_id").
+		Joins("left join manufacturers on manufacturers.id = medicines.manufacturer_id").
+		Where("medicines.id = ?", id).
+		First(&medicine).Error
+	if err != nil {
+		return nil, err
+	}
+	return &medicine, nil
+}

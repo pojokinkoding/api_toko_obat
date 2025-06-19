@@ -20,6 +20,9 @@ var (
 	db                 *gorm.DB = database.InitDatabase()
 	medicineRepo                = repository.NewMedicineRepository(db)
 	medicineController          = controller.NewMedicineController(medicineRepo)
+
+	categoryRepo       = repository.NewCategoryRepository(db)
+	categoryController = controller.NewCategoryController(categoryRepo)
 )
 
 func main() {
@@ -46,6 +49,11 @@ func main() {
 	{
 		api.GET("/protected", handlers.ProtectedRoute)
 		api.GET("/medicines", medicineController.GetAllMedicine)
+		api.GET("/medicines/:id", medicineController.GetMedicineByID)
+
+		api.GET("/categories", categoryController.GetAllCategory)
+		api.GET("/categories/:id", categoryController.GetCategoryByID)
+		api.POST("/categories", categoryController.CreateCategory)
 	}
 
 	// Jalankan server
