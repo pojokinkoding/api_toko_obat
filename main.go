@@ -1,13 +1,25 @@
 package main
 
 import (
+	"toko_obat/controller"
+	"toko_obat/database"
 	"toko_obat/firebase"
 	"toko_obat/handlers"
+	"toko_obat/repository"
 
 	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"gorm.io/gorm"
+)
+
+var (
+
+	// inits database
+	db                 *gorm.DB = database.InitDatabase()
+	medicineRepo                = repository.NewMedicineRepository(db)
+	medicineController          = controller.NewMedicineController(medicineRepo)
 )
 
 func main() {
@@ -33,6 +45,7 @@ func main() {
 	api.Use(handlers.AuthMiddleware())
 	{
 		api.GET("/protected", handlers.ProtectedRoute)
+		api.GET("/medicines", medicineController.GetAllMedicine)
 	}
 
 	// Jalankan server

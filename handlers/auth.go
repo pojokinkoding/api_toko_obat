@@ -11,13 +11,15 @@ import (
 	"encoding/json"
 	"os"
 
+	"toko_obat/repo/request"
+	"toko_obat/repo/response"
+
 	"github.com/gin-gonic/gin"
 )
 
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idToken := c.GetHeader("Authorization")
-		fmt.Println("idToken", idToken)
 		if idToken == "" {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Missing Authorization Header"})
 			c.Abort()
@@ -54,30 +56,14 @@ func ProtectedRoute(c *gin.Context) {
 	})
 }
 
-type LoginRequest struct {
-	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
-}
-
-type FirebaseLoginResponse struct {
-	IDToken      string `json:"idToken"`
-	RefreshToken string `json:"refreshToken"`
-	ExpiresIn    string `json:"expiresIn"`
-	LocalID      string `json:"localId"`
-	Email        string `json:"email"`
-	Error        *struct {
-		Message string `json:"message"`
-	} `json:"error,omitempty"`
-}
-
 func Login(c *gin.Context) {
-	var req LoginRequest
+	var req request.LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return
 	}
 
-	apiKey := os.Getenv("FIREBASE_API_KEY") // TODO: ini harus diubah ke env AIzaSyDuRLnhw7xdM7I8ZtACrF07oSHJ17oTUDQ
+	apiKey := os.Getenv("FIREBASE_API_KEY")
 	if apiKey == "" {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Missing Firebase API Key"})
 		return
@@ -98,7 +84,7 @@ func Login(c *gin.Context) {
 	}
 	defer resp.Body.Close()
 
-	var firebaseResp FirebaseLoginResponse
+	var firebaseResp response.FirebaseLoginResponse
 	if err := json.NewDecoder(resp.Body).Decode(&firebaseResp); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to parse Firebase response"})
 		return

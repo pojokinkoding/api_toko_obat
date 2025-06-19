@@ -8,8 +8,10 @@ API sederhana untuk autentikasi menggunakan Firebase (email & password) dengan G
 2. **Buat file `.env` di root project:**
    ```
    FIREBASE_API_KEY=YOUR_FIREBASE_API_KEY
+   DATABASE_DSN=postgres://user:password@localhost:5432/dbname?sslmode=disable
    ```
    Ganti `YOUR_FIREBASE_API_KEY` dengan API key dari Firebase Console (Project Settings > Web API Key).
+   Ganti `DATABASE_DSN` dengan DSN PostgreSQL Anda.
 3. **Letakkan file service account Firebase** (misal: `firebase-adminsdk.json`) di root project.
 4. **Jalankan aplikasi:**
    ```
