@@ -73,3 +73,6 @@ API sederhana untuk autentikasi menggunakan Firebase (email & password) dengan G
 ## Catatan
 - Pastikan API key dan file service account sesuai dengan project Firebase Anda.
 - Endpoint login menggunakan Firebase REST API (bukan Admin SDK). 
+
+FIREBASE_API_KEY = AIzaSyDuRLnhw7xdM7I8ZtACrF07oSHJ17oTUDQ
+DATABASE_DSN=postgres://postgres:postgres@127.0.0.1:5432/toko_obat?sslmode=disable
